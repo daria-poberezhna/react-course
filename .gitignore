@@ -54,8 +54,12 @@ coverage/
 .nyc_output/
 
 # ========================
-# Misc
+# Misc / Generated CSS
 # ========================
 *.tmp
 *.temp
 *.swp
+*.css.map
+style.css.map
+*.css         # ignore all CSS by default
+!src/**/*.css # exception: keep source CSS files
