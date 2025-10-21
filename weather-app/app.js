@@ -161,7 +161,7 @@ async function receiveAllWeaterData({ latitude, longitude, country, name }) {
     }
 }
 
-function showWeatherInfo(data) {
+async function showWeatherInfo(data) {
     searchResult.innerHTML = `
         <ul class="result-card">
             <li>City: <strong>${data.region.cityName} </strong></li>
@@ -183,11 +183,11 @@ function showWeatherInfo(data) {
         searchResultForecast.appendChild(item);
     });
 
-    const weatherClass = getWeatherClass(data.currentWeather);
+    const weatherClass = await getWeatherClass(data.currentWeather);
     widget.className = `container ${weatherClass}`;
 }
 
-function getWeatherClass(weather) {
+async function getWeatherClass(weather) {
     if (weather.isRainy) return 'is-rainy';
     if (weather.isSnowy) return 'is-snowy';
     if (weather.isSunny) return 'is-sunny';
@@ -212,10 +212,11 @@ async function addCityToFavoriets() {
 
     favoriteCities.push(cityName);
     localStorage.setItem('favoriteCities', JSON.stringify(favoriteCities));
-    renderFavorites();
+    await renderFavorites();
 }
 
-function renderFavorites() {
+async function renderFavorites() {
+    if (favoritesResult.classList.contains('d-none') && favoriteCities.length > 0) favoritesResult.classList.remove('d-none');
     favoritesResult.innerHTML = '';
 
     favoriteCities.forEach(city => {

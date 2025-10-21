@@ -10,7 +10,7 @@ body {
   margin: 100px auto;
   background-color: lightblue;
   background-repeat: no-repeat;
-  background-position: bottom 0 right 30px;
+  background-position: bottom 0 right 50px;
   background-size: 200px;
   padding: 50px;
   position: relative;
@@ -155,10 +155,25 @@ body {
   margin-top: 20px;
   width: calc(50% - 64px);
   min-height: 80px;
+  color: blue;
 }
 .result-card--favorites li {
   text-transform: capitalize;
   cursor: pointer;
+  text-decoration: underline;
+}
+@media (max-width: 768px) {
+  .result-card--favorites {
+    background: transparent;
+    border: 0;
+  }
+  .result-card--favorites li {
+    padding-bottom: 10px;
+  }
+}
+
+.d-none {
+  display: none;
 }
 
 /*# sourceMappingURL=style.css.map */
