@@ -7,14 +7,12 @@ const searchError = document.getElementById('js-search-error');
 const searchResult = document.getElementById('js-search-result');
 const cleanBtn = document.getElementById('js-clean-btn');
 const favoriteBtn = document.getElementById('js-favorite-btn');
+const favoritesResult = document.getElementById('js-favorites-result');
+let favoriteCities = [];
 
 searchBtn.addEventListener('click', showCityWeather);
 cleanBtn.addEventListener('click', cleanSearch);
 favoriteBtn.addEventListener('click', addCityToFavoriets);
-
-async function addCityToFavoriets() {
-    
-}
 
 async function cleanSearch() {
     searchInput.value = '';
@@ -164,9 +162,8 @@ async function receiveAllWeaterData({ latitude, longitude, country, name }) {
 }
 
 function showWeatherInfo(data) {
-    console.log(data);
     searchResult.innerHTML = `
-        <ul class="search-result__tile">
+        <ul class="result-card">
             <li>City: <strong>${data.region.cityName} </strong></li>
             <li>Country: <strong>${data.region.countryName} </strong></li>
             <li>Temperature: <strong>${data.currentWeather.temperature} </strong></li>
@@ -174,7 +171,7 @@ function showWeatherInfo(data) {
             <li>Description: <strong>${data.currentWeather.description} </strong></li>
         </ul>
 
-        <ul class="search-result__tile" id="js-next-five-days">
+        <ul class="result-card" id="js-next-five-days">
         </ul>
     `;
 
@@ -199,3 +196,43 @@ function getWeatherClass(weather) {
     if (weather.isThunder) return 'is-thunder';
     return '';
 }
+
+async function addCityToFavoriets() {
+    const cityName = searchInput.value.trim();
+
+    if (!cityName) {
+        searchError.textContent = 'Please enter a city first.';
+        return;
+    }
+
+    if (favoriteCities.includes(cityName)) {
+        searchError.textContent = 'City is already in favorites.';
+        return;
+    }
+
+    favoriteCities.push(cityName);
+    localStorage.setItem('favoriteCities', JSON.stringify(favoriteCities));
+    renderFavorites();
+}
+
+function renderFavorites() {
+    favoritesResult.innerHTML = '';
+
+    favoriteCities.forEach(city => {
+        const cityElement = document.createElement('li');
+        cityElement.textContent = city;
+        
+        cityElement.addEventListener('click', () => {
+            searchInput.value = city;
+            showCityWeather();
+        });
+
+        favoritesResult.appendChild(cityElement);
+    });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const savedCities = JSON.parse(localStorage.getItem('favoriteCities')) || [];
+    favoriteCities = savedCities;
+    renderFavorites();
+});
